@@ -1,26 +1,6 @@
-require './people_list'
+require 'swapi_service_client/types/people_list'
 
 module SwapiServiceClient
-  class Person
-    def initialize(person)
-      @name = person.name
-      @height = person.height
-      @hair_color = person.hair_color
-      @gneder = person.gender
-    end
-
-    private
-
-    attr_reader :name, :height, :hair_color, :gender
-  end
-
-  class PeopleList
-
-    def initialize(people)
-      @people = people.map { |person| new Person.new(person) }
-    end
-  end
-
   class Client
     DEFAULT_HEADERS = {
       'Accept': 'application/json',
@@ -39,8 +19,7 @@ module SwapiServiceClient
     end
 
     def get_people
-      puts 'get_people from client'
-      # return PeopleList.new(swapi_client.get "people/").body.results)
+      SwapiServiceClient::Types::PeopleList.new(JSON.parse(swapi_client.get("people/").body))
     end
 
     private
