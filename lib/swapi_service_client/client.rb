@@ -14,6 +14,9 @@ module SwapiServiceClient
     def initialize(config)
       @swapi_client = Faraday.new(url: config[:base_url], headers: DEFAULT_HEADERS) do |faraday|
         faraday.request :url_encoded
+        faraday.response :logger, nil, { headers: false, bodies: false }
+
+        # Adapter has to be defined after middleware
         faraday.adapter Faraday.default_adapter
       end
     end

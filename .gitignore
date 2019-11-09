@@ -12,3 +12,6 @@
 
 # Gem builds
 *.gem
+
+# Ignore Gemfile.lock
+Gemfile.lock
