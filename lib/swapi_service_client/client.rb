@@ -1,3 +1,4 @@
+require 'addressable/uri'
 require 'swapi_service_client/types/people_list'
 
 module SwapiServiceClient
@@ -21,8 +22,10 @@ module SwapiServiceClient
       end
     end
 
-    def get_people
-      SwapiServiceClient::Types::PeopleList.new(JSON.parse(swapi_client.get("people/").body))
+    def get_people(options = {})
+      addressable = Addressable::URI.new
+      addressable.query_values = options
+      SwapiServiceClient::Types::PeopleList.new(JSON.parse(swapi_client.get("people/?#{addressable.query}").body))
     end
 
     private
