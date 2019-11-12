@@ -1,8 +1,9 @@
-require 'swapi_service_client/types/people_list'
-require 'swapi_service_client/types/person'
+require 'swapi_service_client/people'
 
 module SwapiServiceClient
   class Client
+    include SwapiServiceClient::People
+
     DEFAULT_HEADERS = {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
@@ -17,22 +18,11 @@ module SwapiServiceClient
         faraday.request :url_encoded
         faraday.response :logger, Rails.logger, { headers: false, bodies: false }
         faraday.response :json, parser_options: { symbolize_names: true }
+        faraday.use :instrumentation
 
         # Adapter has to be defined after middleware
         faraday.adapter Faraday.default_adapter
       end
-    end
-
-    def get_people(options = {})
-      path = 'people'
-      params = { query_params: options }
-      SwapiServiceClient::Types::PeopleList.new(make_get_request(path, params))
-    end
-
-    def get_person(person_id)
-      path = 'people/{person_id}'
-      params = { person_id: person_id }
-      SwapiServiceClient::Types::Person.new(make_get_request(path, params))
     end
 
     private
