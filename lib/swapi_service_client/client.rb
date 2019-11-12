@@ -1,5 +1,6 @@
-require 'addressable/uri'
+require 'addressable/template'
 require 'swapi_service_client/types/people_list'
+require 'swapi_service_client/types/person'
 
 module SwapiServiceClient
   class Client
@@ -23,13 +24,25 @@ module SwapiServiceClient
     end
 
     def get_people(options = {})
-      addressable = Addressable::URI.new
-      addressable.query_values = options
-      SwapiServiceClient::Types::PeopleList.new(JSON.parse(swapi_client.get("people/?#{addressable.query}").body))
+      path = 'people'
+      params = { query_params: options }
+      SwapiServiceClient::Types::PeopleList.new(make_get_request(path, params))
+    end
+
+    def get_person(person_id)
+      path = 'people/{person_id}'
+      params = { person_id: person_id }
+      SwapiServiceClient::Types::Person.new(make_get_request(path, params))
     end
 
     private
 
     attr_reader :swapi_client
+
+    def make_get_request(path, params = {})
+      request_uri = Addressable::Template.new("#{path}/{?query_params*}")
+      request_uri = request_uri.expand(params).to_s
+      response = JSON.parse(swapi_client.get("#{request_uri}").body)
+    end
   end
 end
