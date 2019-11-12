@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'faraday', '~> 0.17.0'
+  spec.add_dependency 'faraday_middleware', '~> 0.13.1'
   spec.add_dependency 'dry-struct', '~> 1.1.1'
   spec.add_dependency 'addressable', '~> 2.7'
 

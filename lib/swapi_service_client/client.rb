@@ -1,4 +1,3 @@
-require 'addressable/template'
 require 'swapi_service_client/types/people_list'
 require 'swapi_service_client/types/person'
 
@@ -17,6 +16,7 @@ module SwapiServiceClient
       @swapi_client = Faraday.new(url: config[:base_url], headers: DEFAULT_HEADERS) do |faraday|
         faraday.request :url_encoded
         faraday.response :logger, Rails.logger, { headers: false, bodies: false }
+        faraday.response :json, parser_options: { symbolize_names: true }
 
         # Adapter has to be defined after middleware
         faraday.adapter Faraday.default_adapter
@@ -42,7 +42,7 @@ module SwapiServiceClient
     def make_get_request(path, params = {})
       request_uri = Addressable::Template.new("#{path}/{?query_params*}")
       request_uri = request_uri.expand(params).to_s
-      response = JSON.parse(swapi_client.get("#{request_uri}").body)
+      response = swapi_client.get("#{request_uri}").body
     end
   end
 end
