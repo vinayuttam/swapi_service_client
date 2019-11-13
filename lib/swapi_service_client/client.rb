@@ -1,8 +1,10 @@
 require 'swapi_service_client/people'
+require 'swapi_service_client/films'
 
 module SwapiServiceClient
   class Client
     include SwapiServiceClient::People
+    include SwapiServiceClient::Films
 
     DEFAULT_HEADERS = {
       'Accept': 'application/json',
