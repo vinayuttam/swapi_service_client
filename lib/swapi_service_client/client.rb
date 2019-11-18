@@ -31,10 +31,13 @@ module SwapiServiceClient
 
     attr_reader :swapi_client
 
-    def make_get_request(path, params = {})
+    def construct_request_uri(path, params = {})
       request_uri = Addressable::Template.new("#{path}/{?query_params*}")
       request_uri = request_uri.expand(params).to_s
-      response = swapi_client.get("#{request_uri}").body
+    end
+
+    def make_get_request(path, params = {})
+      response = swapi_client.get("#{construct_request_uri(path, params)}").body
     end
   end
 end
